@@ -330,6 +330,59 @@
     /* v23: 앱 화면만 보이도록 오른쪽 설명 패널 제거 */
     .stage{gap:0;}
     .side-note,.desktop-only{display:none!important;}
+
+    /* v24: 실제 휴대폰 화면에서 너무 확대되어 보이지 않도록 앱 논리 화면을 축소 */
+    @media(max-width:850px){
+      :root{--mobile-scale:.92;}
+      .screen{
+        right:auto!important;
+        bottom:auto!important;
+        width:calc(100dvw / var(--mobile-scale))!important;
+        height:calc(100dvh / var(--mobile-scale))!important;
+        min-height:calc(100dvh / var(--mobile-scale))!important;
+        transform:scale(var(--mobile-scale));
+        transform-origin:top left;
+      }
+      .content{
+        padding-left:16px;
+        padding-right:16px;
+        padding-bottom:calc(104px + env(safe-area-inset-bottom));
+      }
+      .content.route > section.card[style*="min-height:610px"],
+      .point-guide-card{
+        min-height:0!important;
+      }
+      .content.route > section.card[style*="min-height:610px"]{
+        padding:20px 16px 16px!important;
+      }
+      .point-guide-card{
+        padding:20px 16px 16px!important;
+      }
+      .content.route > section.card[style*="min-height:610px"] h2{
+        font-size:18px!important;
+      }
+      .content.route > section.card[style*="min-height:610px"] p.hint{
+        font-size:11.5px!important;
+      }
+      .content.route div[style*="min-height:190px"]{
+        min-height:130px!important;
+      }
+      .point-guide-illust{
+        width:120px!important;
+        height:120px!important;
+        font-size:56px!important;
+        margin:12px auto 14px!important;
+      }
+      .point-guide-list{gap:9px!important;margin:14px 0!important;}
+      .point-guide-item{padding:12px 14px!important;}
+    }
+    @media(max-width:850px) and (max-height:740px){
+      :root{--mobile-scale:.86;}
+    }
+    @media(max-width:850px) and (max-height:670px){
+      :root{--mobile-scale:.80;}
+    }
+
 </style>
 </head>
 <body>
@@ -1368,7 +1421,7 @@ function completePayment(){state.points+=state.selectedPointPack;closeOverlay();
 function renderMy(){
   state.tab='my';
   return layout('마이페이지','준혁님 · 가입일 2026.03.13',`
-    <section class="card"><div class="row between"><div class="row"><div class="logo">👤</div><div><h3 class="h3">닉네임</h3><p class="caption">가입날짜 2026.03.13</p></div></div><button class="pill" onclick="setRoute('mySub',{mySub:'profile'})">수정</button></div></section>
+    <section class="card"><div class="row between"><div class="row"><div class="logo">👤</div><div><h3 class="h3">준혁</h3><p class="caption">가입날짜 2026.03.13</p></div></div><button class="pill" onclick="setRoute('mySub',{mySub:'profile'})">수정</button></div></section>
     ${[
       ['집 리스트','houses'],['결제 내역','payment'],['알림 설정','alerts'],['1:1 문의','contact'],['이용약관','terms'],['개인정보 처리방침','privacy']
     ].map(([t,s])=>`<button class="link-row" onclick="${s==='payment'?`setRoute('payment')`:`setRoute('mySub',{mySub:'${s}'})`}"><span>${t}</span><b>›</b></button>`).join('')}
